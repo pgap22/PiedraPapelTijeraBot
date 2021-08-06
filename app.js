@@ -124,10 +124,11 @@ client.on('clickButton', async (button) => {
                 .setTitle('Todo ya esta listo!')
                 .setFooter('Powered by **Pgap#1203**')
             let confirmacionboton = new disbut.MessageButton()
-                .setEmoji('☑')
+                .setEmoji('👍')//for the commit
                 .setID('confirmar')
                 .setLabel('Confirmar')
                 .setStyle('green')
+
 
             client.users.fetch(jugadorNumeroDos).then((user) => {
                 user.send({
