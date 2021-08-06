@@ -109,7 +109,6 @@ client.on('clickButton', async (button) => {
     Checa si es el boton de la sesion activa ademas de corroborar que el jugador 1 no sea igual que el 2
     */
     if (button.id == botonId) {
-        noTimeOut = true;
         if (button.clicker.id == jugadorNumeroUno) {
             const ErrorAutoPlayer = new discord.MessageEmbed()
                 .setColor('RED')
@@ -121,6 +120,7 @@ client.on('clickButton', async (button) => {
             await button.reply.defer()
 
         } else if (button.clicker.id != jugadorNumeroUno) {
+            noTimeOut = true;
             jugadorNumeroDos = button.clicker.id
             const Done = new discord.MessageEmbed()
                 .setColor('GREY')
