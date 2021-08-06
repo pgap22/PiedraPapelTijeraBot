@@ -49,7 +49,6 @@ let timer = setTimeout(() => {
     }
     else{
     console.log('TIMEOUT HEAVY 10 MINTOS')
-    message.channel.send('Hey, Hey, Hey, Muy lentos dense prisa pense que estaban AFK xD. Tengo un timeout de 10minutos :=)')
     VariablesAlDefault();
     }
 }, timeout)
