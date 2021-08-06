@@ -39,19 +39,7 @@ Variable Bool para seleccionar un objeto en el menu!
 */
 var menuOnPlayer1 = false
 var menuOnPlayer2 = false
-/*
-TImer para time out
-*/
-let timer = setTimeout(() => {
-    if (noTimeOut2) {
-        console.log('JUego terminado asiq xd')
-        clearTimeout(timer)
-    }
-    else{
-    console.log('TIMEOUT HEAVY 10 MINTOS')
-    VariablesAlDefault();
-    }
-}, timeout)
+
 
 
 function VariablesAlDefault() {
@@ -85,7 +73,6 @@ function VariablesAlDefault() {
     */
     menuOnPlayer1 = false
     menuOnPlayer2 = false
-    console.log('VARIABLE AS DEFAULT')
 }
 
 
@@ -354,9 +341,7 @@ client.on('clickMenu', async (button) => {
     Vamos a ver quien es el ganador con ifs y detectar cuando ya los 2 jugadores elijieron
     */
     if (button.id == menuId) {
-        console.log('FIrst attemp DOne')
         if(menuOnPlayer1 & menuOnPlayer2){
-            console.log('Second attempt')
         //embeds bonitos para indicar que paso xd
         const Empate = new discord.MessageEmbed()
             .setColor('GREY')
@@ -385,13 +370,11 @@ client.on('clickMenu', async (button) => {
 
             client.users.fetch(jugadorNumeroUno).then((user) => {
                 user.send(Empate)
-                console.log('JUEGO TERMINADO')
             
                 VariablesAlDefault();
             })
             client.users.fetch(jugadorNumeroDos).then((user) => {
                 user.send(Empate)
-                console.log('JUEGO TERMINADO')
            
                 VariablesAlDefault();
             })
@@ -594,6 +577,13 @@ client.on('clickMenu', async (button) => {
 
 client.on('message', async (message) => {
    
+    if(message.content == "$FinJuego"){
+        if(message.author.id == jugadorNumeroUno){
+            VariablesAlDefault()
+            message.reply('la sesion de juego ha sido cancelada')
+        }
+    }
+
     //XD lo unico que se me ocurrio xd
     if (message.embeds) {
         if (message.embeds[0]) {
