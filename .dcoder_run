@@ -1,0 +1,8 @@
+# write commands to install modules/lib and run your project, one in each line.
+# node and npm commands are available along with other basic linux commands.
+# command to run
+git config --global user.email "ahorcadogamediscord@gmail.com"
+git config --global user.name "PgapPhone"
+git add .
+git commit -am "ErrorEmbed Added for ActiveGame xd"
+git push

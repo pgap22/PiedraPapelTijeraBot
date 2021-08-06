@@ -653,7 +653,12 @@ client.on('message', async (message) => {
     
 
     } else if (message.content.toLowerCase() == `${prefix}start` & juegoActivo) {
-        message.reply("Ya hay un juego activo");
+        const ActiveGame = new discord.MessageEmbed()
+        .setTitle('Error D:')
+        .setDescription('Ya hay una partida en juego')
+        .setColor('RED')
+        
+        message.reply(ActiveGame);
     }
 
 })
