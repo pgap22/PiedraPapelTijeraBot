@@ -296,7 +296,7 @@ client.on('clickMenu', async (button) => {
 
             menuOnPlayer1 = true
             opcionDeJugadorUno = button.values.toString()
-            console.log('JUGADOR UNO: ' + opcionDeJugadorUno)
+            console.log('JUGADOR UNO: ' + opcionDeJugadorUno," ",menuOnPlayer1)
             client.users.fetch(jugadorNumeroDos).then((user) => {
                 const eligio = new discord.MessageEmbed()
                     .setDescription(`${jugadorNumeroUnoNombre} Ya eligio`)
@@ -314,7 +314,7 @@ client.on('clickMenu', async (button) => {
         if (button.clicker.id == jugadorNumeroDos & !menuOnPlayer2) {
             menuOnPlayer2 = true
             opcionDeJugadorDos = button.values.toString()
-            console.log('JUGADOR Dos: ' + opcionDeJugadorDos)
+            console.log('JUGADOR Dos: ' + opcionDeJugadorDos," ",menuOnPlayer2)
             await button.reply.defer()
             client.users.fetch(jugadorNumeroUno).then((user) => {
                 const eligio = new discord.MessageEmbed()
@@ -353,8 +353,10 @@ client.on('clickMenu', async (button) => {
     /*
     Vamos a ver quien es el ganador con ifs y detectar cuando ya los 2 jugadores elijieron
     */
-    if (menuOnPlayer2 & menuOnPlayer1) {
-
+    if (button.id == menuId) {
+        console.log('FIrst attemp DOne')
+        if(menuOnPlayer1 & menuOnPlayer2){
+            console.log('Second attempt')
         //embeds bonitos para indicar que paso xd
         const Empate = new discord.MessageEmbed()
             .setColor('GREY')
@@ -523,10 +525,10 @@ client.on('clickMenu', async (button) => {
 
             }
 
-        } else if (opcionDeJugadorUno == 'tijera') {
+        } else if (opcionDeJugadorUno == 'piedra') {
             //Depende de lo que haya elejido el jugador 2 Vamos a ver quien a ganado
 
-            if (opcionDeJugadorDos == 'piedra') {
+            if (opcionDeJugadorDos == 'papel') {
 
                 client.users.fetch(jugadorNumeroUno).then((user) => {
                     user.send(Pierde)
@@ -555,7 +557,7 @@ client.on('clickMenu', async (button) => {
                 })
 
 
-            } else if (opcionDeJugadorDos == 'papel') {
+            } else if (opcionDeJugadorDos == 'tijera') {
 
                 client.users.fetch(jugadorNumeroUno).then((user) => {
                     user.send(Gane)
@@ -586,7 +588,7 @@ client.on('clickMenu', async (button) => {
             }
         }
     } //llave del proceso para ver quien gana
-
+}
 
 }) //llave del evento clickmenu
 
