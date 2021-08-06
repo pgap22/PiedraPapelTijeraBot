@@ -383,9 +383,15 @@ client.on('clickMenu', async (button) => {
 
             client.users.fetch(jugadorNumeroUno).then((user) => {
                 user.send(Empate)
+                console.log('JUEGO TERMINADO')
+            
+                VariablesAlDefault();
             })
             client.users.fetch(jugadorNumeroDos).then((user) => {
                 user.send(Empate)
+                console.log('JUEGO TERMINADO')
+           
+                VariablesAlDefault();
             })
         }
 
@@ -652,18 +658,7 @@ client.on('message', async (message) => {
 
         })
 
-        setTimeout(() => {
-            if (!noTimeOut) {
-                console.log('TIME OUT ELEGIR')
-                message.channel.send('Hey, el segundo jugador parece estar AFK, no le da a el boton :(')
-                VariablesAlDefault();
-            } else {
-                console.log('no time out pero vamos con el otro');
-                timer;
-
-            }
-        }, timeout_select)
-
+    
 
     } else if (message.content.toLowerCase() == `${prefix}start` & juegoActivo) {
         message.reply("Ya hay un juego activo");
