@@ -5,6 +5,7 @@ const disbut = require("discord-buttons");
 disbut(client);
 const token = process.env.BOT_TOKEN;
 const prefix = process.env.BOT_PREFIX;
+const BOT_ID_CANAL = process.env.BOT_ID_CANAL;
 var timeout = process.env.TIMEOUT_GAME;
 var timeout_select = process.env.TIMEOUT_SELECT
 var timeout = parseInt(timeout);
@@ -26,7 +27,8 @@ var menuId = "";
 
 var jugadorNumeroUnoConfirmar = false
 var jugadorNumeroDosConfirmar = false
-var noTimeOut = false;
+var mensajeId = "";
+
 var noTimeOut2 = false
 
 var jugadoresListos = false;
@@ -60,7 +62,8 @@ function VariablesAlDefault() {
 
     jugadorNumeroUnoConfirmar = false
     jugadorNumeroDosConfirmar = false
-    noTimeOut = false;
+    mensajeId = "";
+
     noTimeOut2 = false
 
     jugadoresListos = false;
@@ -124,7 +127,7 @@ client.on('clickButton', async (button) => {
                 .setTitle('Todo ya esta listo!')
                 .setFooter('Powered by **Pgap#1203**')
             let confirmacionboton = new disbut.MessageButton()
-                .setEmoji('👍')//for the commit
+                .setEmoji('👍') //for the commit
                 .setID('confirmar')
                 .setLabel('Confirmar')
                 .setStyle('green')
@@ -284,7 +287,7 @@ client.on('clickMenu', async (button) => {
 
             menuOnPlayer1 = true
             opcionDeJugadorUno = button.values.toString()
-            console.log('JUGADOR UNO: ' + opcionDeJugadorUno," ",menuOnPlayer1)
+            console.log('JUGADOR UNO: ' + opcionDeJugadorUno, " ", menuOnPlayer1)
             client.users.fetch(jugadorNumeroDos).then((user) => {
                 const eligio = new discord.MessageEmbed()
                     .setDescription(`${jugadorNumeroUnoNombre} Ya eligio`)
@@ -302,7 +305,7 @@ client.on('clickMenu', async (button) => {
         if (button.clicker.id == jugadorNumeroDos & !menuOnPlayer2) {
             menuOnPlayer2 = true
             opcionDeJugadorDos = button.values.toString()
-            console.log('JUGADOR Dos: ' + opcionDeJugadorDos," ",menuOnPlayer2)
+            console.log('JUGADOR Dos: ' + opcionDeJugadorDos, " ", menuOnPlayer2)
             await button.reply.defer()
             client.users.fetch(jugadorNumeroUno).then((user) => {
                 const eligio = new discord.MessageEmbed()
@@ -341,266 +344,427 @@ client.on('clickMenu', async (button) => {
     /*
     Vamos a ver quien es el ganador con ifs y detectar cuando ya los 2 jugadores elijieron
     */
+
     if (button.id == menuId) {
-        if(menuOnPlayer1 & menuOnPlayer2){
-        //embeds bonitos para indicar que paso xd
-        const Empate = new discord.MessageEmbed()
-            .setColor('GREY')
-            .setDescription('Vaya parece que han empatado!\n\n**Pueden iniciar otra ronda con $start**')
-            .setTitle('EMPATE')
 
-        const Gane = new discord.MessageEmbed()
-            .setColor('GREEN')
-            .setDescription('Felicidades has ganado ! :D')
-            .setTitle('Has Ganado :D')
-        const Pierde = new discord.MessageEmbed()
-            .setTitle('Has perdido D:')
-            .setDescription('Que mal has perdido! Suerte en la proxima!')
-            .setColor('RED')
+        if (menuOnPlayer1 & menuOnPlayer2) {
+
+            //embeds bonitos para indicar que paso xd
+
+            const Empate = new discord.MessageEmbed()
+                .setColor('GREY')
+                .setDescription('Vaya parece que han empatado!\n\n**Pueden iniciar otra ronda con $start**')
+                .setTitle('EMPATE')
+
+            const Gane = new discord.MessageEmbed()
+                .setColor('GREEN')
+                .setDescription('Felicidades has ganado ! :D')
+                .setTitle('Has Ganado :D')
+            const Pierde = new discord.MessageEmbed()
+                .setTitle('Has perdido D:')
+                .setDescription('Que mal has perdido! Suerte en la proxima!')
+                .setColor('RED')
+
+            //Empate
+            if (opcionDeJugadorUno == opcionDeJugadorDos) {
+                client.users.fetch(jugadorNumeroUno).then((user) => {
+                    jugadorNumeroUnoNombre = user.username
+                })
+                client.users.fetch(jugadorNumeroDos).then((user) => {
+                    jugadorNumeroDosNombre = user.username
+                })
+
+                //cambiar el mensaje principal por un empate :D
+                let channel = client.channels.cache.get(BOT_ID_CANAL)
+                channel.messages.fetch(mensajeId).then((mensaje) => {
+                    let botonEmpate = new disbut.MessageButton()
+                        .setEmoji('💤')
+                        .setLabel('Empate!')
+                        .setID('done')
+                        .setStyle('gray')
+                    let embedEmpate = new discord.MessageEmbed()
+                        .setColor('GRAY')
+                        .setDescription(`Vaya Parece que hubo un empate entre!\n\n **${jugadorNumeroUnoNombre}** VS **${jugadorNumeroDosNombre}** `)
+                        .setTitle('EMPATE')
+                        .setFooter('Powered by Pgap4#1203')
+
+                    mensaje.edit({
+                        button: botonEmpate,
+                        content: 'Otia estos piensan igual',
+                        embed: embedEmpate
+                    })
+                })
 
 
-        //Empate
-        if (opcionDeJugadorUno == opcionDeJugadorDos) {
 
-            client.users.fetch(jugadorNumeroUno).then((user) => {
-                jugadorNumeroUnoNombre = user.username
-            })
-            client.users.fetch(jugadorNumeroDos).then((user) => {
-                jugadorNumeroDosnoNombre = user.username
-            })
-
-            client.users.fetch(jugadorNumeroUno).then((user) => {
-                user.send(Empate)
-            
-                VariablesAlDefault();
-            })
-            client.users.fetch(jugadorNumeroDos).then((user) => {
-                user.send(Empate)
-           
-                VariablesAlDefault();
-            })
-        }
-
-        //Identificamos la opcion de jugador1 para ver si gano o perdio atraves de un else if para evitar confuciones
-        else if (opcionDeJugadorUno == 'tijera') {
-
-            //Depende de lo que haya elejido el jugador 2 Vamos a ver quien a ganado
-
-            if (opcionDeJugadorDos == 'piedra') {
 
                 client.users.fetch(jugadorNumeroUno).then((user) => {
-                    user.send(Pierde)
+                    user.send(Empate)
 
-
-                    const Elecciones = new discord.MessageEmbed()
-                        .setColor('BLUE')
-                        .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
-                        .setTitle('Elecciones')
-                    //Voy a enviar un embed de que eligio cada uno :)
-
-                    user.send(Elecciones)
+                    VariablesAlDefault();
                 })
-
                 client.users.fetch(jugadorNumeroDos).then((user) => {
-                    user.send(Gane)
+                    user.send(Empate)
 
-
-                    const Elecciones = new discord.MessageEmbed()
-                        .setColor('BLUE')
-                        .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
-                        .setTitle('Elecciones')
-                    //Voy a enviar un embed de que eligio cada uno :)
-
-                    user.send(Elecciones)
+                    VariablesAlDefault();
                 })
-
-
-            } else if (opcionDeJugadorDos == 'papel') {
-
-                client.users.fetch(jugadorNumeroUno).then((user) => {
-                    user.send(Gane)
-
-
-                    const Elecciones = new discord.MessageEmbed()
-                        .setColor('BLUE')
-                        .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
-                        .setTitle('Elecciones')
-                    //Voy a enviar un embed de que eligio cada uno :)
-
-                    user.send(Elecciones)
-                })
-
-                client.users.fetch(jugadorNumeroDos).then((user) => {
-                    user.send(Pierde)
-
-
-                    const Elecciones = new discord.MessageEmbed()
-                        .setColor('BLUE')
-                        .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
-                        .setTitle('Elecciones')
-                    //Voy a enviar un embed de que eligio cada uno :)
-
-                    user.send(Elecciones)
-                })
-
-
-            }
-        }
-        // Y hacemos lo mismo con todos xD
-        else if (opcionDeJugadorUno == 'papel') {
-            //Depende de lo que haya elejido el jugador 2 Vamos a ver quien a ganado
-
-            if (opcionDeJugadorDos == 'tijera') {
-
-                client.users.fetch(jugadorNumeroUno).then((user) => {
-                    user.send(Pierde)
-
-
-                    const Elecciones = new discord.MessageEmbed()
-                        .setColor('BLUE')
-                        .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
-                        .setTitle('Elecciones')
-                    //Voy a enviar un embed de que eligio cada uno :)
-
-                    user.send(Elecciones)
-                })
-
-                client.users.fetch(jugadorNumeroDos).then((user) => {
-                    user.send(Gane)
-
-
-                    const Elecciones = new discord.MessageEmbed()
-                        .setColor('BLUE')
-                        .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
-                        .setTitle('Elecciones')
-                    //Voy a enviar un embed de que eligio cada uno :)
-
-                    user.send(Elecciones)
-                })
-
-            } else if (opcionDeJugadorDos == 'piedra') {
-
-                client.users.fetch(jugadorNumeroUno).then((user) => {
-                    user.send(Gane)
-
-
-                    const Elecciones = new discord.MessageEmbed()
-                        .setColor('BLUE')
-                        .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
-                        .setTitle('Elecciones')
-                    //Voy a enviar un embed de que eligio cada uno :)
-
-                    user.send(Elecciones)
-                })
-
-                client.users.fetch(jugadorNumeroDos).then((user) => {
-                    user.send(Pierde)
-
-
-                    const Elecciones = new discord.MessageEmbed()
-                        .setColor('BLUE')
-                        .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
-                        .setTitle('Elecciones')
-                    //Voy a enviar un embed de que eligio cada uno :)
-
-                    user.send(Elecciones)
-                })
-
-
             }
 
-        } else if (opcionDeJugadorUno == 'piedra') {
-            //Depende de lo que haya elejido el jugador 2 Vamos a ver quien a ganado
+            //Identificamos la opcion de jugador1 para ver si gano o perdio atraves de un else if para evitar confuciones
 
-            if (opcionDeJugadorDos == 'papel') {
+            else if (opcionDeJugadorUno == 'tijera') {
 
-                client.users.fetch(jugadorNumeroUno).then((user) => {
-                    user.send(Pierde)
+                //Depende de lo que haya elejido el jugador 2 Vamos a ver quien a ganado
 
+                if (opcionDeJugadorDos == 'piedra') {             
+                      //cambiar el mensaje principal para el gane  :D
+               
+                      let channel = client.channels.cache.get(BOT_ID_CANAL)
+               
+                      channel.messages.fetch(mensajeId).then((mensaje)=>{
+                    
+                        let botonGane = new disbut.MessageButton()
+                        .setEmoji('🎉')
+                        .setLabel('GANADOR!')
+                        .setID('done')
+                        .setStyle('green')
 
-                    const Elecciones = new discord.MessageEmbed()
-                        .setColor('BLUE')
-                        .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
-                        .setTitle('Elecciones')
-                    //Voy a enviar un embed de que eligio cada uno :)
-
-                    user.send(Elecciones)
-                })
-
-                client.users.fetch(jugadorNumeroDos).then((user) => {
-                    user.send(Gane)
-
-
-                    const Elecciones = new discord.MessageEmbed()
-                        .setColor('BLUE')
-                        .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
-                        .setTitle('Elecciones')
-                    //Voy a enviar un embed de que eligio cada uno :)
-
-                    user.send(Elecciones)
-                })
-
-
-            } else if (opcionDeJugadorDos == 'tijera') {
-
-                client.users.fetch(jugadorNumeroUno).then((user) => {
-                    user.send(Gane)
+                        let embedGane = new discord.MessageEmbed()
+                        .setColor('GREEN')
+                        .setDescription(`**${jugadorNumeroDosNombre}** ACABA DE GANAR LA PARTIDA CONTRA **${jugadorNumeroUnoNombre}**!`)
+                        .setTitle(jugadorNumeroDosNombre)
+                        .setFooter('Powered by Pgap4#1203')
+                    
+                        mensaje.edit({button: botonGane,content: 'RESULTADOS !!!!',embed: embedGane })
+                    })
+                   
+                    client.users.fetch(jugadorNumeroUno).then((user) => {
+                        user.send(Pierde)
 
 
-                    const Elecciones = new discord.MessageEmbed()
-                        .setColor('BLUE')
-                        .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
-                        .setTitle('Elecciones')
-                    //Voy a enviar un embed de que eligio cada uno :)
+                        const Elecciones = new discord.MessageEmbed()
+                            .setColor('BLUE')
+                            .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
+                            .setTitle('Elecciones')
+                        //Voy a enviar un embed de que eligio cada uno :)
 
-                    user.send(Elecciones)
-                })
+                        user.send(Elecciones)
+                    })
 
-                client.users.fetch(jugadorNumeroDos).then((user) => {
-                    user.send(Pierde)
+                    client.users.fetch(jugadorNumeroDos).then((user) => {
+                        user.send(Gane)
 
 
-                    const Elecciones = new discord.MessageEmbed()
-                        .setColor('BLUE')
-                        .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
-                        .setTitle('Elecciones')
-                    //Voy a enviar un embed de que eligio cada uno :)
+                        const Elecciones = new discord.MessageEmbed()
+                            .setColor('BLUE')
+                            .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
+                            .setTitle('Elecciones')
+                        //Voy a enviar un embed de que eligio cada uno :)
 
-                    user.send(Elecciones)
-                })
+                        user.send(Elecciones)
+                    })
+                    setTimeout( ()=>{
+                        console.log('JUEGO TERMINADO')
+                        VariablesAlDefault();
+                    },500)
 
+                } else if (opcionDeJugadorDos == 'papel') {
+
+                    //cambiar el mensaje principal para el gane  :D
+               
+                    let channel = client.channels.cache.get(BOT_ID_CANAL)
+               
+                    channel.messages.fetch(mensajeId).then((mensaje)=>{
+                  
+                      let botonGane = new disbut.MessageButton()
+                      .setEmoji('🎉')
+                      .setLabel('GANADOR!')
+                      .setID('done')
+                      .setStyle('green')
+
+                      let embedGane = new discord.MessageEmbed()
+                      .setColor('GREEN')
+                      .setDescription(`**${jugadorNumeroUnoNombre}** ACABA DE GANAR LA PARTIDA CONTRA **${jugadorNumeroDosNombre}**!`)
+                      .setTitle(jugadorNumeroUnoNombre)
+                      .setFooter('Powered by Pgap4#1203')
+                  
+                      mensaje.edit({button: botonGane,content: 'RESULTADOS !!!!',embed: embedGane })
+                  })
+
+                    client.users.fetch(jugadorNumeroUno).then((user) => {
+                        user.send(Gane)
+
+
+                        const Elecciones = new discord.MessageEmbed()
+                            .setColor('BLUE')
+                            .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
+                            .setTitle('Elecciones')
+                        //Voy a enviar un embed de que eligio cada uno :)
+
+                        user.send(Elecciones)
+                    })
+
+                    client.users.fetch(jugadorNumeroDos).then((user) => {
+                        user.send(Pierde)
+
+
+                        const Elecciones = new discord.MessageEmbed()
+                            .setColor('BLUE')
+                            .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
+                            .setTitle('Elecciones')
+                        //Voy a enviar un embed de que eligio cada uno :)
+
+                        user.send(Elecciones)
+                    })
+
+                    setTimeout( ()=>{
+                        console.log('JUEGO TERMINADO')
+                        VariablesAlDefault();
+                    },500)
+
+                }
             }
-        }
-    } //llave del proceso para ver quien gana
-}
+            // Y hacemos lo mismo con todos xD
+            else if (opcionDeJugadorUno == 'papel') {
+                
+                //Depende de lo que haya elejido el jugador 2 Vamos a ver quien a ganado
+
+                if (opcionDeJugadorDos == 'tijera') {
+
+                    //cambiar el mensaje principal para el gane  :D
+               
+                    let channel = client.channels.cache.get(BOT_ID_CANAL)
+               
+                    channel.messages.fetch(mensajeId).then((mensaje)=>{
+                  
+                      let botonGane = new disbut.MessageButton()
+                      .setEmoji('🎉')
+                      .setLabel('GANADOR!')
+                      .setID('done')
+                      .setStyle('green')
+
+                      let embedGane = new discord.MessageEmbed()
+                      .setColor('GREEN')
+                      .setDescription(`**${jugadorNumeroDosNombre}** ACABA DE GANAR LA PARTIDA CONTRA **${jugadorNumeroUnoNombre}**!`)
+                      .setTitle(jugadorNumeroDosNombre)
+                      .setFooter('Powered by Pgap4#1203')
+                  
+                      mensaje.edit({button: botonGane,content: 'RESULTADOS !!!!',embed: embedGane })
+                  })
+
+                    client.users.fetch(jugadorNumeroUno).then((user) => {
+                        user.send(Pierde)
+
+
+                        const Elecciones = new discord.MessageEmbed()
+                            .setColor('BLUE')
+                            .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
+                            .setTitle('Elecciones')
+                        //Voy a enviar un embed de que eligio cada uno :)
+
+                        user.send(Elecciones)
+                    })
+
+                    client.users.fetch(jugadorNumeroDos).then((user) => {
+                        user.send(Gane)
+
+
+                        const Elecciones = new discord.MessageEmbed()
+                            .setColor('BLUE')
+                            .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
+                            .setTitle('Elecciones')
+                        //Voy a enviar un embed de que eligio cada uno :)
+
+                        user.send(Elecciones)
+                    })
+
+                    setTimeout( ()=>{
+                        console.log('JUEGO TERMINADO')
+                        VariablesAlDefault();
+                    },500)
+                } else if (opcionDeJugadorDos == 'piedra') {
+                    //cambiar el mensaje principal para el gane  :D
+               
+                    let channel = client.channels.cache.get(BOT_ID_CANAL)
+               
+                    channel.messages.fetch(mensajeId).then((mensaje)=>{
+                  
+                      let botonGane = new disbut.MessageButton()
+                      .setEmoji('🎉')
+                      .setLabel('GANADOR!')
+                      .setID('done')
+                      .setStyle('green')
+
+                      let embedGane = new discord.MessageEmbed()
+                      .setColor('GREEN')
+                      .setDescription(`**${jugadorNumeroUnoNombre}** ACABA DE GANAR LA PARTIDA CONTRA **${jugadorNumeroDosNombre}**!`)
+                      .setTitle(jugadorNumeroUnoNombre)
+                      .setFooter('Powered by Pgap4#1203')
+                  
+                      mensaje.edit({button: botonGane,content: 'RESULTADOS !!!!',embed: embedGane })
+                  })
+
+                    client.users.fetch(jugadorNumeroUno).then((user) => {
+                        user.send(Gane)
+
+
+                        const Elecciones = new discord.MessageEmbed()
+                            .setColor('BLUE')
+                            .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
+                            .setTitle('Elecciones')
+                        //Voy a enviar un embed de que eligio cada uno :)
+
+                        user.send(Elecciones)
+                    })
+
+                    client.users.fetch(jugadorNumeroDos).then((user) => {
+                        user.send(Pierde)
+
+
+                        const Elecciones = new discord.MessageEmbed()
+                            .setColor('BLUE')
+                            .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
+                            .setTitle('Elecciones')
+                        //Voy a enviar un embed de que eligio cada uno :)
+
+                        user.send(Elecciones)
+                    })
+
+                    setTimeout( ()=>{
+                        console.log('JUEGO TERMINADO')
+                        VariablesAlDefault();
+                    },500)
+                }
+
+            } else if (opcionDeJugadorUno == 'piedra') {
+                //Depende de lo que haya elejido el jugador 2 Vamos a ver quien a ganado
+
+                if (opcionDeJugadorDos == 'papel') {
+
+                    //cambiar el mensaje principal para el gane  :D
+               
+                    let channel = client.channels.cache.get(BOT_ID_CANAL)
+               
+                    channel.messages.fetch(mensajeId).then((mensaje)=>{
+                  
+                      let botonGane = new disbut.MessageButton()
+                      .setEmoji('🎉')
+                      .setLabel('GANADOR!')
+                      .setID('done')
+                      .setStyle('green')
+
+                      let embedGane = new discord.MessageEmbed()
+                      .setColor('GREEN')
+                      .setDescription(`**${jugadorNumeroDosNombre}** ACABA DE GANAR LA PARTIDA CONTRA **${jugadorNumeroUnoNombre}**!`)
+                      .setTitle(jugadorNumeroDosNombre)
+                      .setFooter('Powered by Pgap4#1203')
+                  
+                      mensaje.edit({button: botonGane,content: 'RESULTADOS !!!!',embed: embedGane })
+                  })
+
+                    client.users.fetch(jugadorNumeroUno).then((user) => {
+                        user.send(Pierde)
+
+
+                        const Elecciones = new discord.MessageEmbed()
+                            .setColor('BLUE')
+                            .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
+                            .setTitle('Elecciones')
+                        //Voy a enviar un embed de que eligio cada uno :)
+
+                        user.send(Elecciones)
+                    })
+
+                    client.users.fetch(jugadorNumeroDos).then((user) => {
+                        user.send(Gane)
+
+
+                        const Elecciones = new discord.MessageEmbed()
+                            .setColor('BLUE')
+                            .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
+                            .setTitle('Elecciones')
+                        //Voy a enviar un embed de que eligio cada uno :)
+
+                        user.send(Elecciones)
+                    })
+                    setTimeout( ()=>{
+                        console.log('JUEGO TERMINADO')
+                        VariablesAlDefault();
+                    },500)
+
+                } else if (opcionDeJugadorDos == 'tijera') {
+
+                    //cambiar el mensaje principal para el gane  :D
+               
+                    let channel = client.channels.cache.get(BOT_ID_CANAL)
+               
+                    channel.messages.fetch(mensajeId).then((mensaje)=>{
+                  
+                      let botonGane = new disbut.MessageButton()
+                      .setEmoji('🎉')
+                      .setLabel('GANADOR!')
+                      .setID('done')
+                      .setStyle('green')
+
+                      let embedGane = new discord.MessageEmbed()
+                      .setColor('GREEN')
+                      .setDescription(`**${jugadorNumeroUnoNombre}** ACABA DE GANAR LA PARTIDA CONTRA **${jugadorNumeroDosNombre}**!`)
+                      .setTitle(jugadorNumeroUnoNombre)
+                      .setFooter('Powered by Pgap4#1203')
+                  
+                      mensaje.edit({button: botonGane,content: 'RESULTADOS !!!!',embed: embedGane })
+                  })
+
+                    client.users.fetch(jugadorNumeroUno).then((user) => {
+                        user.send(Gane)
+
+
+                        const Elecciones = new discord.MessageEmbed()
+                            .setColor('BLUE')
+                            .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
+                            .setTitle('Elecciones')
+                        //Voy a enviar un embed de que eligio cada uno :)
+
+                        user.send(Elecciones)
+                    })
+
+                    client.users.fetch(jugadorNumeroDos).then((user) => {
+                        user.send(Pierde)
+
+
+                        const Elecciones = new discord.MessageEmbed()
+                            .setColor('BLUE')
+                            .setDescription(`**${jugadorNumeroUnoNombre}: ** ${opcionDeJugadorUno.toUpperCase()}\n\n**${jugadorNumeroDosNombre}:** ${opcionDeJugadorDos.toUpperCase()} `)
+                            .setTitle('Elecciones')
+                        //Voy a enviar un embed de que eligio cada uno :)
+
+                        user.send(Elecciones)
+                    })
+                    setTimeout( ()=>{
+                        console.log('JUEGO TERMINADO')
+                        VariablesAlDefault();
+                    },500)
+                }
+            }
+        } //llave del proceso para ver quien gana
+    }
 
 }) //llave del evento clickmenu
 
 client.on('message', async (message) => {
-   
-    if(message.content == "$FinJuego"){
-        if(message.author.id == jugadorNumeroUno){
+
+    if (message.content == "$FinJuego") {
+        if (message.author.id == jugadorNumeroUno) {
             VariablesAlDefault()
             message.reply('la sesion de juego ha sido cancelada')
         }
     }
 
-    //XD lo unico que se me ocurrio xd
-    if (message.embeds) {
-        if (message.embeds[0]) {
-            if (message.embeds[0].title == 'Elecciones') {
-                console.log('JUEGO TERMINADO')
-                noTimeOut2 = true;
-                VariablesAlDefault();
-                
-            }
-        }
-    }
 
     /*
     Solucionador de spam del bot xD y para no funcionar el $start por DM
     */
-    if (!message.guild || message.author.bot) {
+    if (!message.guild) {
         return 0;
     }
     /*
@@ -616,6 +780,7 @@ client.on('message', async (message) => {
 
         menuId = Math.floor(Math.random() * 90000) + 10000 //id para el menu y que no sea igual
         menuId = menuId.toString();
+
 
         juegoActivo = true;
         jugadorNumeroUno = message.author.id;
@@ -637,7 +802,11 @@ client.on('message', async (message) => {
         message.channel.send({
             button: boton,
             embed: SegundoJugador
+        }).then((mensaje) => {
+            mensajeId = mensaje.id
+            console.log(mensajeId)
         })
+
         /*
         Detectar a los jugadores
         */
@@ -651,14 +820,13 @@ client.on('message', async (message) => {
 
         })
 
-    
 
     } else if (message.content.toLowerCase() == `${prefix}start` & juegoActivo) {
         const ActiveGame = new discord.MessageEmbed()
-        .setTitle('Error D:')
-        .setDescription('Ya hay una partida en juego')
-        .setColor('RED')
-        
+            .setTitle('Error D:')
+            .setDescription('Ya hay una partida en juego')
+            .setColor('RED')
+
         message.reply(ActiveGame);
     }
 
