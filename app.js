@@ -6,10 +6,6 @@ disbut(client);
 const token = process.env.BOT_TOKEN;
 const prefix = process.env.BOT_PREFIX;
 const BOT_ID_CANAL = process.env.BOT_ID_CANAL;
-var timeout = process.env.TIMEOUT_GAME;
-var timeout_select = process.env.TIMEOUT_SELECT
-var timeout = parseInt(timeout);
-var timeout_select = parseInt(timeout_select)
 /*
 Variables default para el minijuego
 */
@@ -29,7 +25,6 @@ var jugadorNumeroUnoConfirmar = false
 var jugadorNumeroDosConfirmar = false
 var mensajeId = "";
 
-var noTimeOut2 = false
 
 var jugadoresListos = false;
 /*
@@ -64,7 +59,6 @@ function VariablesAlDefault() {
     jugadorNumeroDosConfirmar = false
     mensajeId = "";
 
-    noTimeOut2 = false
 
     jugadoresListos = false;
     /*
