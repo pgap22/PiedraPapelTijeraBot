@@ -45,4 +45,4 @@ Solo faltaría invitar a tu bot al tu serveridor supongo que ya sabes como hacer
 # COMANDOS
 **$start** = Para iniciar una sesion 
 
-**[prefix]FinJuego** = Cancelar una sesion de juego
+**$FinJuego** = Cancelar una sesion de juego
