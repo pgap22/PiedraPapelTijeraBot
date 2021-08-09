@@ -8,6 +8,7 @@
  3. Datos para nuestro .env
 
  **Instalación**
+ 
 En la terminal pondremos lo siguiente 
 
     git clone https://github.com/pgap22/PiedraPapelTijeraBot.git
@@ -22,7 +23,7 @@ Hay 2 datos que son requisitos nuestro token de nuestro bot [Aqui Puedes crear t
  
  
 Para obtener el id de nuestro canal damos click derecho en el y copiar el id en nuestro **.env*
-![Channel Id](https://cdn.discordapp.com/attachments/872674835896098856/874108543492579328/unknown.png)
+
  
 
 Tu **.env** debe ser algo asi (Los valores son diferentes a los tuyos)
