@@ -15,12 +15,17 @@ En la terminal pondremos lo siguiente
     npm install
 **Datos de nuestro bot**
 
- 1. Cambiaremos el archivo .env.example a solamente **.env**
- 2. Hay 2 datos que son requisitos nuestro token de nuestro bot [Aqui Puedes crear tu bot y obtener el token](https://discord.com/developers/applications) Y además de el, id de nuestro canal específico para el bot, para obtener el id de nuestro canal habilita el modo desarrollador![Activar modo desarrollador](https://cdn.discordapp.com/attachments/872674835896098856/874107596913651722/unknown.png)
- 3. Para obtener el id de nuestro canal damos click derecho en el y copiar el id en nuestro **.env*
- ![Channel Id](https://cdn.discordapp.com/attachments/872674835896098856/874108543492579328/unknown.png)
  
- 4. Tu **.env** debe ser algo asi (Los valores son diferentes a los tuyos)
+Cambiaremos el archivo .env.example a solamente **.env**
+
+Hay 2 datos que son requisitos nuestro token de nuestro bot [Aqui Puedes crear tu bot y obtener el token](https://discord.com/developers/applications) Y además de el, id de nuestro canal específico para el bot, para obtener el id de nuestro canal habilita el modo desarrollador![Activar modo desarrollador](https://cdn.discordapp.com/attachments/872674835896098856/874107596913651722/unknown.png)
+ 
+ 
+Para obtener el id de nuestro canal damos click derecho en el y copiar el id en nuestro **.env*
+![Channel Id](https://cdn.discordapp.com/attachments/872674835896098856/874108543492579328/unknown.png)
+ 
+
+Tu **.env** debe ser algo asi (Los valores son diferentes a los tuyos)
 
 **EJEMPLO .ENV**
 
